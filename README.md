@@ -1,5 +1,7 @@
 # Programmable DevKit
 
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 An unofficial developer kit for [Programmable Market](https://programmable.market) on
 Robinhood Chain (chainId 4663): a typed SDK, an MCP server, and a hook scaffolder with a
 local admission checker.
@@ -111,6 +113,16 @@ git config core.hooksPath .git-hooks
 
 It blocks staged `.env` files, real-looking API keys, and `0x…` private keys. See
 [BUILD_GUIDE.md §3](BUILD_GUIDE.md#3-secrets--safety).
+
+## Contributing
+
+Issues and PRs: <https://github.com/aabxtract/programmable-kit>
+
+```bash
+git clone https://github.com/aabxtract/programmable-kit.git
+cd programmable-kit
+npm install && npm run build && npm run check
+```
 
 ## Status
 

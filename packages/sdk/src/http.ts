@@ -370,33 +370,67 @@ export class HttpClient {
     if (init.body !== undefined) headers["content-type"] = "application/json";
 
     const timeoutMs = init.timeoutMs ?? this.timeoutMs;
-    const timeoutSignal = AbortSignal.timeout(timeoutMs);
+
+    // An explicit controller rather than AbortSignal.timeout(), so the timer can be
+    // cleared the moment the request settles. AbortSignal.timeout() leaves a live libuv
+    // handle for the full duration even after the response arrives, which on Windows
+    // crashes with "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)" if the
+    // process exits before it expires.
+    const controller = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, timeoutMs);
+
     const signal = init.signal
-      ? AbortSignal.any([init.signal, timeoutSignal])
-      : timeoutSignal;
+      ? AbortSignal.any([init.signal, controller.signal])
+      : controller.signal;
 
     let response: Response;
+    let contentType: string | null;
+    let raw: string;
+
     try {
-      response = await this.fetchImpl(url, {
-        method,
-        headers,
-        signal,
-        ...(init.body !== undefined ? { body: JSON.stringify(init.body) } : {}),
-      });
-    } catch (cause) {
-      // Distinguish our own deadline from a caller-initiated abort or a real network fault.
-      if (timeoutSignal.aborted) {
-        throw new ProgrammableTimeoutError(
-          `${method} ${url} timed out after ${timeoutMs}ms.`,
-          timeoutMs,
-        );
+      try {
+        response = await this.fetchImpl(url, {
+          method,
+          headers,
+          signal,
+          ...(init.body !== undefined ? { body: JSON.stringify(init.body) } : {}),
+        });
+      } catch (cause) {
+        // Distinguish our own deadline from a caller abort or a real network fault.
+        if (timedOut) {
+          throw new ProgrammableTimeoutError(
+            `${method} ${url} timed out after ${timeoutMs}ms.`,
+            timeoutMs,
+          );
+        }
+        if (init.signal?.aborted) throw cause;
+        throw new ProgrammableNetworkError(method, url, cause);
       }
-      if (init.signal?.aborted) throw cause;
-      throw new ProgrammableNetworkError(method, url, cause);
+
+      contentType = response.headers.get("content-type");
+
+      // The body read is covered by the same deadline — a server that sends headers and
+      // then stalls would otherwise hang indefinitely.
+      try {
+        raw = await response.text();
+      } catch (cause) {
+        if (timedOut) {
+          throw new ProgrammableTimeoutError(
+            `${method} ${url} timed out after ${timeoutMs}ms reading the response body.`,
+            timeoutMs,
+          );
+        }
+        if (init.signal?.aborted) throw cause;
+        throw new ProgrammableNetworkError(method, url, cause);
+      }
+    } finally {
+      clearTimeout(timer);
     }
 
-    const contentType = response.headers.get("content-type");
-    const raw = await response.text();
     const parsed = isJsonContentType(contentType) ? safeJsonParse(raw) : raw;
 
     if (!response.ok) {

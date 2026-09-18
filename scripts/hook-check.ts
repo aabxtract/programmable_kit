@@ -103,6 +103,21 @@ async function main(): Promise<void> {
         failed += 1;
       }
 
+      // Generated scripts must not call process.exit() after a fetch: on Node 24 for
+      // Windows that aborts with a libuv assertion instead of exiting. Setting
+      // process.exitCode and letting Node drain is the portable form.
+      for (const script of ["scripts/watch-launch.mjs", "scripts/capabilities.mjs"]) {
+        // Strip comments first — these scripts *document* why they avoid
+        // process.exit(), and matching that prose would fail a correct file.
+        const body = (await readFile(join(target, script), "utf8"))
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .replace(/\/\/.*$/gm, "");
+        if (/process\.exit\s*\(/.test(body)) {
+          console.log(`  FAIL ${script.padEnd(30)} calls process.exit() — use exitCode`);
+          failed += 1;
+        }
+      }
+
       if (result.ok) {
         console.log(
           `  PASS scaffold ${template.padEnd(18)} clean (${result.warnings} warning(s))`,

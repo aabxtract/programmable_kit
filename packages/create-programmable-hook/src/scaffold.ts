@@ -208,44 +208,59 @@ import {
 const client = createClient();
 const launchId = process.argv[2];
 
-if (!client.hasApiKey) {
-  console.error("Set PROGRAMMABLE_API_KEY in .env first.");
-  process.exit(1);
+/**
+ * Everything runs inside main() and returns rather than calling process.exit().
+ *
+ * On Node 24 for Windows, calling process.exit() — or letting an exception escape the
+ * top level — after a fetch aborts the process with
+ * "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)". Setting process.exitCode and
+ * letting Node drain naturally avoids it entirely, and is better practice regardless:
+ * process.exit() truncates pending stdout writes.
+ */
+async function main() {
+  if (!client.hasApiKey) {
+    console.error("Set PROGRAMMABLE_API_KEY in .env first.");
+    return 1;
+  }
+
+  if (!launchId) {
+    const page = await client.launches.listCustomLaunches({ limit: 10 });
+    if (page.launches.length === 0) {
+      console.log("No custom launches on this API key yet.");
+      return 0;
+    }
+    console.log("Your recent launches:\\n");
+    for (const l of page.launches) {
+      console.log(\`  \${l.launchId}  \${l.status.padEnd(26)} \${l.failure?.code ?? ""}\`);
+    }
+    console.log("\\nRe-run with:  npm run watch -- <launchId>");
+    return 0;
+  }
+
+  try {
+    const result = await client.launches.watchUntil(launchId, "authorized", {
+      onPoll: (status, n) => console.log(\`  poll \${n}: \${status.status}\`),
+    });
+    console.log("\\nAuthorized. Sign here:\\n  " + result.walletHandoffUrl);
+    return 0;
+  } catch (error) {
+    if (error instanceof ProgrammableActionRequiredError) {
+      console.error("\\nWaiting on you, not the server:");
+      console.error("  " + (error.failure?.code ?? error.state));
+      console.error("  " + (error.failure?.message ?? ""));
+      return 1;
+    }
+    if (error instanceof ProgrammableLaunchFailedError) {
+      console.error("\\nLaunch failed: " + (error.failure?.code ?? error.state));
+      console.error("  retryable: " + String(error.failure?.retryable));
+      return 1;
+    }
+    console.error(error instanceof Error ? error.message : String(error));
+    return 1;
+  }
 }
 
-if (!launchId) {
-  const page = await client.launches.listCustomLaunches({ limit: 10 });
-  if (page.launches.length === 0) {
-    console.log("No custom launches on this API key yet.");
-    process.exit(0);
-  }
-  console.log("Your recent launches:\\n");
-  for (const l of page.launches) {
-    console.log(\`  \${l.launchId}  \${l.status.padEnd(26)} \${l.failure?.code ?? ""}\`);
-  }
-  console.log("\\nRe-run with:  npm run watch -- <launchId>");
-  process.exit(0);
-}
-
-try {
-  const result = await client.launches.watchUntil(launchId, "authorized", {
-    onPoll: (status, n) => console.log(\`  poll \${n}: \${status.status}\`),
-  });
-  console.log("\\nAuthorized. Sign here:\\n  " + result.walletHandoffUrl);
-} catch (error) {
-  if (error instanceof ProgrammableActionRequiredError) {
-    console.error("\\nWaiting on you, not the server:");
-    console.error("  " + (error.failure?.code ?? error.state));
-    console.error("  " + (error.failure?.message ?? ""));
-    process.exit(1);
-  }
-  if (error instanceof ProgrammableLaunchFailedError) {
-    console.error("\\nLaunch failed: " + (error.failure?.code ?? error.state));
-    console.error("  retryable: " + String(error.failure?.retryable));
-    process.exit(1);
-  }
-  throw error;
-}
+process.exitCode = await main();
 `;
 }
 
@@ -264,20 +279,27 @@ import { createClient } from "@programmable-devkit/sdk";
 
 const client = createClient();
 
-if (!client.hasApiKey) {
-  console.error("Set PROGRAMMABLE_API_KEY in .env first.");
-  process.exit(1);
+// See watch-launch.mjs: returning from main() instead of calling process.exit() avoids
+// a Node 24 / Windows abort when the process ends with pending fetch handles.
+async function main() {
+  if (!client.hasApiKey) {
+    console.error("Set PROGRAMMABLE_API_KEY in .env first.");
+    return 1;
+  }
+
+  const capabilities = await client.http.request({
+    origin: "customLaunch",
+    path: \`/v4/chains/\${client.chainId}/capabilities\`,
+  }, { auth: true });
+
+  console.log("compiler      ", capabilities.toolchains?.[0]?.version ?? "?");
+  console.log("profileDigest ", capabilities.profile?.profileDigest ?? "?");
+  console.log("profileVersion", capabilities.profile?.profileVersion ?? "?");
+  console.log("\\nPaste profileDigest into programmable-launch.config.json -> profile.profileDigest");
+  return 0;
 }
 
-const capabilities = await client.http.request({
-  origin: "customLaunch",
-  path: \`/v4/chains/\${client.chainId}/capabilities\`,
-}, { auth: true });
-
-console.log("compiler      ", capabilities.toolchains?.[0]?.version ?? "?");
-console.log("profileDigest ", capabilities.profile?.profileDigest ?? "?");
-console.log("profileVersion", capabilities.profile?.profileVersion ?? "?");
-console.log("\\nPaste profileDigest into programmable-launch.config.json -> profile.profileDigest");
+process.exitCode = await main();
 `;
 }
 

@@ -26,5 +26,15 @@
     "@modelcontextprotocol/sdk": "^1.12.0",
     "@types/node": "^20.14.0",
     "typescript": "^5.6.0"
+  },
+  "license": "MIT",
+  "author": "Anuoluwapo Afolami",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aabxtract/programmable-kit.git"
+  },
+  "homepage": "https://github.com/aabxtract/programmable-kit#readme",
+  "bugs": {
+    "url": "https://github.com/aabxtract/programmable-kit/issues"
   }
 }

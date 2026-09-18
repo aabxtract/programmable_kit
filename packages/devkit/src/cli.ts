@@ -37,7 +37,7 @@ Commands:
 
 Run \`programmable new --help\` for template-specific options.
 
-Docs: https://github.com/programmablehq/Developers
+Docs: https://github.com/aabxtract/programmable-kit
 `;
 
 async function cmdNew(argv: string[]): Promise<void> {

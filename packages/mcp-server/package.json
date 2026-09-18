@@ -35,5 +35,15 @@
   "devDependencies": {
     "@types/node": "^20.14.0",
     "typescript": "^5.6.0"
+  },
+  "author": "Anuoluwapo Afolami",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aabxtract/programmable-kit.git",
+    "directory": "packages/mcp-server"
+  },
+  "homepage": "https://github.com/aabxtract/programmable-kit/tree/main/packages/mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/aabxtract/programmable-kit/issues"
   }
 }
