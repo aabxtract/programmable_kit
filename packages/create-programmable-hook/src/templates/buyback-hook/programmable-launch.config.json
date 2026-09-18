@@ -1,0 +1,59 @@
+{
+  "$comment": "Programmable custom launch config. Fields marked TODO must be filled before submitting. Values here match the live v4 profile for Robinhood Chain as of 2026-09-17; re-check with `programmable-check --show-profile`.",
+  "schemaVersion": "programmable.custom-launch-request.v4",
+  "chainId": 4663,
+  "caip2": "eip155:4663",
+  "profile": {
+    "structuralProfileId": "programmable.custom-launch.robinhood-mainnet.v1",
+    "businessProfileId": "robinhood-production-launch",
+    "$comment": "Bind the live profileDigest before packing. Read it from GET /v4/chains/4663/capabilities — a stale digest fails with PLAN_MANIFEST_MISMATCH.",
+    "profileDigest": "{{PROFILE_DIGEST}}"
+  },
+  "token": {
+    "name": "{{TOKEN_NAME}}",
+    "symbol": "{{TOKEN_SYMBOL}}",
+    "decimals": 18,
+    "$comment": "totalSupply is a raw integer string, not a number. JSON numbers lose precision above 2^53."
+  },
+  "hook": {
+    "name": "BuybackHook",
+    "sourcePath": "src/BuybackHook.sol",
+    "compiler": {
+      "$comment": "Must match the platform toolchain exactly. A floating pragma changes the runtime hash and fails runtime_binding.",
+      "solc": "0.8.26+commit.8a97fa7a"
+    },
+    "constructorArgs": {
+      "$comment": "poolManager is bound by the platform — do not hardcode it here or in source.",
+      "treasury": "{{TREASURY}}",
+      "buybackBps": {{BUYBACK_BPS}}
+    },
+    "permissions": {
+      "$comment": "Must agree with getHookPermissions() AND the mined hook address bits. Bit positions are fixed by the platform manifest.",
+      "beforeInitialize": false,
+      "afterInitialize": false,
+      "beforeAddLiquidity": false,
+      "afterAddLiquidity": false,
+      "beforeRemoveLiquidity": false,
+      "afterRemoveLiquidity": false,
+      "beforeSwap": false,
+      "afterSwap": true,
+      "beforeDonate": false,
+      "afterDonate": false,
+      "beforeSwapReturnDelta": false,
+      "afterSwapReturnDelta": false,
+      "afterAddLiquidityReturnDelta": false,
+      "afterRemoveLiquidityReturnDelta": false
+    }
+  },
+  "funding": {
+    "$comment": "Robinhood V4.1 requires a request-bound funding plan. valueWei is a raw integer string.",
+    "mode": "wallet-transaction-value",
+    "valueWei": "{{FUNDING_WEI}}"
+  },
+  "disclosures": {
+    "$comment": "Anything programmable-check reports as a warning belongs here. Undeclared privileged controls attract review; declared ones usually don't.",
+    "delegatecall": false,
+    "pauseOrOwnership": false,
+    "mintCapability": false
+  }
+}

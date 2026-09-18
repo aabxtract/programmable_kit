@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# Key leak guard.
+#
+# Programmable's docs say "store the secret outside source control and logs." This
+# blocks the three ways that goes wrong: committing a .env, committing a filled-in key,
+# and committing a raw private key.
+#
+# Install:  git config core.hooksPath .git-hooks
+# Bypass:   git commit --no-verify   (you had better be sure)
+
+set -e
+
+RED=''
+YELLOW=''
+RESET=''
+if [ -t 2 ]; then
+  RED=$(printf '\033[31m')
+  YELLOW=$(printf '\033[33m')
+  RESET=$(printf '\033[0m')
+fi
+
+fail() {
+  printf '%sBLOCKED: %s%s\n' "$RED" "$1" "$RESET" >&2
+  FOUND=1
+}
+
+FOUND=0
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+
+[ -z "$STAGED" ] && exit 0
+
+# 1. Env files. .env.example is the one intentional exception.
+for file in $STAGED; do
+  case "$file" in
+    *.env.example|*.env.sample|*.env.template) continue ;;
+    .env|*/.env|*.env|.env.*|*/.env.*)
+      fail "$file is an env file and must not be committed."
+      printf '  Add it to .gitignore, then: git rm --cached %s\n' "$file" >&2
+      ;;
+  esac
+done
+
+# 2. Filled-in API keys. Placeholders are fine; anything long and real-looking is not.
+#    Scans staged content only, so an unstaged local key never trips this.
+KEY_HITS=$(git diff --cached -U0 -- $STAGED 2>/dev/null \
+  | grep -E '^\+' \
+  | grep -Ei 'PROGRAMMABLE_API_KEY[[:space:]]*[:=][[:space:]]*["'"'"']?[A-Za-z0-9_-]{16,}' \
+  | grep -Eiv 'your_key_here|<[^>]+>|\$\{[^}]+\}|xxx+|placeholder|example|changeme|REDACTED' \
+  || true)
+
+if [ -n "$KEY_HITS" ]; then
+  fail "a real-looking PROGRAMMABLE_API_KEY value is staged."
+  printf '%s%s%s\n' "$YELLOW" "$KEY_HITS" "$RESET" >&2
+  printf '  Move it to .env and reference it as ${PROGRAMMABLE_API_KEY} instead.\n' >&2
+fi
+
+# 3. Raw private keys / common third-party secret formats.
+SECRET_HITS=$(git diff --cached -U0 -- $STAGED 2>/dev/null \
+  | grep -E '^\+' \
+  | grep -E '(-----BEGIN [A-Z ]*PRIVATE KEY-----)|(\b0x[a-fA-F0-9]{64}\b)|(\bsk-[A-Za-z0-9]{20,})|(\bpk_live_[A-Za-z0-9]{10,})|(\bghp_[A-Za-z0-9]{36})' \
+  || true)
+
+if [ -n "$SECRET_HITS" ]; then
+  fail "a private key or secret-shaped string is staged."
+  printf '%s%s%s\n' "$YELLOW" "$SECRET_HITS" "$RESET" >&2
+  printf '  A 0x-prefixed 64-hex string is a wallet private key. Do not commit it.\n' >&2
+  printf '  If this is a contract address or a test fixture, bypass with --no-verify.\n' >&2
+fi
+
+if [ "$FOUND" -ne 0 ]; then
+  printf '\nCommit aborted. See BUILD_GUIDE.md section 3.\n' >&2
+  exit 1
+fi
+
+exit 0

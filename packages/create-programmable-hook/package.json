@@ -1,0 +1,37 @@
+{
+  "name": "create-programmable-hook",
+  "version": "0.1.0",
+  "description": "Scaffold Uniswap v4 hooks for Programmable Market, and check them against the live admission invariants before you submit",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "create-programmable-hook": "./dist/cli.js",
+    "programmable-check": "./dist/checker/cli.js"
+  },
+  "files": [
+    "dist",
+    "AGENTS",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-templates.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "uniswap-v4",
+    "hooks",
+    "programmable",
+    "robinhood-chain",
+    "solidity",
+    "scaffold"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.6.0"
+  }
+}

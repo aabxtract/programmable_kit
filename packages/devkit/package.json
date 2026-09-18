@@ -1,0 +1,41 @@
+{
+  "name": "programmable-devkit",
+  "version": "0.1.0",
+  "description": "One command for Programmable Market: scaffold a v4 hook, check it against the live admission invariants, and run the MCP server",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "programmable": "./dist/cli.js",
+    "programmable-devkit": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "programmable",
+    "robinhood-chain",
+    "uniswap-v4",
+    "hooks",
+    "mcp",
+    "cli"
+  ],
+  "dependencies": {
+    "@programmable-devkit/mcp-server": "^0.1.0",
+    "@programmable-devkit/sdk": "^0.1.0",
+    "create-programmable-hook": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.6.0"
+  }
+}

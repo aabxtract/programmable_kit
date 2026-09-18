@@ -1,0 +1,41 @@
+{
+  "name": "buyback-hook",
+  "title": "Buyback hook",
+  "description": "Accrues a share of swap volume into a buyback treasury.",
+  "contract": "BuybackHook",
+  "variables": [
+    {
+      "key": "TOKEN_NAME",
+      "flag": "--name",
+      "prompt": "Token name",
+      "example": "My Token"
+    },
+    {
+      "key": "TOKEN_SYMBOL",
+      "flag": "--symbol",
+      "prompt": "Token symbol",
+      "example": "MYT"
+    },
+    {
+      "key": "TREASURY",
+      "flag": "--treasury",
+      "prompt": "Treasury address that receives buyback value",
+      "example": "0x0000000000000000000000000000000000000000",
+      "type": "address",
+      "appliesTo": "constructorArgs.treasury"
+    },
+    {
+      "key": "BUYBACK_BPS",
+      "flag": "--bps",
+      "prompt": "Share of swap volume accrued, in basis points (100 = 1%)",
+      "example": "100",
+      "default": "100",
+      "type": "integer",
+      "min": 0,
+      "max": 1000,
+      "appliesTo": "constructorArgs.buybackBps"
+    }
+  ],
+  "claims": [],
+  "notes": "Accrual is accounted per pool; wiring the actual transfer to the treasury is left to you."
+}

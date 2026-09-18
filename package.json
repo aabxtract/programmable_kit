@@ -1,0 +1,30 @@
+{
+  "name": "programmable-devkit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript SDK + MCP Server for the Programmable Market API on Robinhood Chain",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "build": "npm run build -w packages/sdk && npm run build -w packages/mcp-server && npm run build -w packages/create-programmable-hook && npm run build -w packages/devkit && tsc -p tsconfig.scripts.json",
+    "build:sdk": "npm run build -w packages/sdk",
+    "build:mcp": "npm run build -w packages/mcp-server",
+    "smoke": "node dist/smoke.js",
+    "check:mcp": "node dist/mcp-check.js",
+    "check": "npm run smoke && npm run check:mcp && npm run check:hook",
+    "typecheck": "tsc -p tsconfig.scripts.json --noEmit",
+    "clean": "node -e \"const{rmSync}=require('fs');['dist','packages/sdk/dist','packages/mcp-server/dist','packages/create-programmable-hook/dist','packages/devkit/dist'].forEach(p=>rmSync(p,{recursive:true,force:true}))\"",
+    "build:hook": "npm run build -w packages/create-programmable-hook",
+    "check:hook": "node dist/hook-check.js"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "@types/node": "^20.14.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "creator-fee-hook",
+  "title": "Creator fee hook",
+  "description": "Applies a creator-set dynamic LP fee on every swap.",
+  "contract": "CreatorFeeHook",
+  "variables": [
+    {
+      "key": "TOKEN_NAME",
+      "flag": "--name",
+      "prompt": "Token name",
+      "example": "My Token"
+    },
+    {
+      "key": "TOKEN_SYMBOL",
+      "flag": "--symbol",
+      "prompt": "Token symbol",
+      "example": "MYT"
+    },
+    {
+      "key": "CREATOR_FEE",
+      "flag": "--fee",
+      "prompt": "Creator fee in pips (hundredths of a bip; 3000 = 0.30%)",
+      "example": "3000",
+      "default": "3000",
+      "type": "integer",
+      "min": 0,
+      "max": 1000000,
+      "appliesTo": "constructorArgs.creatorFee"
+    }
+  ],
+  "claims": ["feeBehavior"],
+  "notes": "This hook overrides the LP fee, which is a fee-behaviour claim. Capabilities currently reports feeBehaviorClaim:false — verify it is enabled for your chain before submitting."
+}
