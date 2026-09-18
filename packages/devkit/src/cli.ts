@@ -18,7 +18,7 @@ import {
   INVARIANTS,
   REQUIRED_SOLC,
 } from "create-programmable-hook";
-import { createClient } from "@programmable-devkit/sdk";
+import { createClient } from "@aabxtract/programmable-sdk";
 
 const VERSION = "0.1.0";
 
@@ -257,7 +257,7 @@ function describe(error: unknown): string {
 
 async function cmdMcp(): Promise<void> {
   // The server owns stdio from here; it never returns.
-  await import("@programmable-devkit/mcp-server/dist/index.js");
+  await import("@aabxtract/programmable-mcp-server/dist/index.js");
 }
 
 async function main(): Promise<void> {

@@ -156,7 +156,7 @@ function projectPackageJson(projectName: string, contract: string): string {
         capabilities: "node --env-file=.env scripts/capabilities.mjs",
       },
       dependencies: {
-        "@programmable-devkit/sdk": SDK_RANGE,
+        "@aabxtract/programmable-sdk": SDK_RANGE,
       },
       devDependencies: {
         "create-programmable-hook": SDK_RANGE,
@@ -174,7 +174,7 @@ function mcpConfig(): string {
       mcpServers: {
         programmable: {
           command: "npx",
-          args: ["-y", "@programmable-devkit/mcp-server"],
+          args: ["-y", "@aabxtract/programmable-mcp-server"],
           env: {
             // Expanded from your environment at launch — never inline the key here.
             // This file is commonly committed.
@@ -203,7 +203,7 @@ import {
   createClient,
   ProgrammableActionRequiredError,
   ProgrammableLaunchFailedError,
-} from "@programmable-devkit/sdk";
+} from "@aabxtract/programmable-sdk";
 
 const client = createClient();
 const launchId = process.argv[2];
@@ -275,7 +275,7 @@ function capabilitiesScript(): string {
  * than copying one from a guide.
  */
 
-import { createClient } from "@programmable-devkit/sdk";
+import { createClient } from "@aabxtract/programmable-sdk";
 
 const client = createClient();
 
@@ -477,7 +477,7 @@ export PROGRAMMABLE_API_KEY=pm_live_...
 `
     : `
 Run \`npx create-programmable-hook --help\` and re-scaffold with MCP enabled, or add
-\`.mcp.json\` yourself pointing at \`@programmable-devkit/mcp-server\`.
+\`.mcp.json\` yourself pointing at \`@aabxtract/programmable-mcp-server\`.
 `
 }
 \`AGENTS.md\` gives your assistant the exact constraints: the pinned compiler, all 14

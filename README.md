@@ -22,7 +22,7 @@ going stale in your repo.
 my-hook/
 ├── src/CreatorFeeHook.sol          checked before the command returns
 ├── programmable-launch.config.json --fee 3000 already substituted
-├── package.json                    depends on @programmable-devkit/sdk
+├── package.json                    depends on @aabxtract/programmable-sdk
 ├── .mcp.json                       Programmable tools for Claude Code / Cursor
 ├── AGENTS.md                       compiler pin, 14 bits, return shapes
 └── scripts/
@@ -48,8 +48,8 @@ drifting apart in separate repos.
 ```
 programmable-devkit/
 ├── packages/
-│   ├── sdk/                        @programmable-devkit/sdk
-│   ├── mcp-server/                 @programmable-devkit/mcp-server
+│   ├── sdk/                        @aabxtract/programmable-sdk
+│   ├── mcp-server/                 @aabxtract/programmable-mcp-server
 │   ├── create-programmable-hook/   create-programmable-hook
 │   └── devkit/                     programmable-devkit  (the `programmable` command)
 ├── scripts/                        smoke.ts · mcp-check.ts · hook-check.ts
@@ -58,8 +58,8 @@ programmable-devkit/
 
 | Package | What it is | Guide |
 |---|---|---|
-| [`@programmable-devkit/sdk`](packages/sdk) | Typed client for the v2 read API and the v4 custom-launch API. Zero runtime deps. | [BUILD_GUIDE.md](BUILD_GUIDE.md) |
-| [`@programmable-devkit/mcp-server`](packages/mcp-server) | 9 MCP tools for Claude Code, Cursor, Windsurf. | [BUILD_GUIDE.md](BUILD_GUIDE.md) |
+| [`@aabxtract/programmable-sdk`](packages/sdk) | Typed client for the v2 read API and the v4 custom-launch API. Zero runtime deps. | [BUILD_GUIDE.md](BUILD_GUIDE.md) |
+| [`@aabxtract/programmable-mcp-server`](packages/mcp-server) | 9 MCP tools for Claude Code, Cursor, Windsurf. | [BUILD_GUIDE.md](BUILD_GUIDE.md) |
 | [`create-programmable-hook`](packages/create-programmable-hook) | Scaffolds v4 hooks; `programmable-check` catches admission blockers locally. | [packages/create-programmable-hook/BUILD_GUIDE.md](packages/create-programmable-hook/BUILD_GUIDE.md) |
 | [`programmable-devkit`](packages/devkit) | Meta-package. One global install, the `programmable` command. | this file |
 
@@ -72,7 +72,7 @@ npm run check          # smoke + mcp-check + hook-check
 ```
 
 ```typescript
-import { createClient } from "@programmable-devkit/sdk";
+import { createClient } from "@aabxtract/programmable-sdk";
 
 const client = createClient();
 const feed = await client.launches.listPage({ limit: 10 });
@@ -127,9 +127,9 @@ npm install && npm run build && npm run check
 ## Status
 
 Unofficial. Not affiliated with or endorsed by Programmable. The `@programmable`
-namespace is not ours — packages publish under `@programmable-devkit`.
+namespace is not ours — packages publish under `@aabxtract`.
 
 npm names checked 2026-09-18: `create-programmable-hook`, `programmable-devkit`,
-`programmable-check` and the `@programmable-devkit/*` scope are all free. Bare
+`programmable-check` and the `@aabxtract/*` scope are all free. Bare
 `programmable` is taken (v1.0.5), which is why the meta-package is `programmable-devkit`
 even though its binary is `programmable`.

@@ -1,5 +1,5 @@
 {
-  "name": "@programmable-devkit/sdk",
+  "name": "@aabxtract/programmable-sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK for the Programmable Market API on Robinhood Chain (chainId 4663)",
   "license": "MIT",

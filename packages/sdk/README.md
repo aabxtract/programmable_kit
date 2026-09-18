@@ -1,14 +1,14 @@
-# @programmable-devkit/sdk
+# @aabxtract/programmable-sdk
 
 TypeScript SDK for the [Programmable Market](https://programmable.market) API,
 defaulting to Robinhood Chain (chainId 4663).
 
 ```bash
-npm install @programmable-devkit/sdk
+npm install @aabxtract/programmable-sdk
 ```
 
 ```typescript
-import { createClient } from "@programmable-devkit/sdk";
+import { createClient } from "@aabxtract/programmable-sdk";
 
 const client = createClient();
 

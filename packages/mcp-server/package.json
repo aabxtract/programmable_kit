@@ -1,5 +1,5 @@
 {
-  "name": "@programmable-devkit/mcp-server",
+  "name": "@aabxtract/programmable-mcp-server",
   "version": "0.1.0",
   "description": "MCP server exposing the Programmable Market API to Claude Code, Cursor, and Windsurf",
   "license": "MIT",
@@ -29,8 +29,8 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
-    "@programmable-devkit/sdk": "^0.1.0",
-    "zod": "^3.23.8"
+    "@aabxtract/programmable-sdk": "^0.1.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

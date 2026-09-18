@@ -27,7 +27,7 @@ import {
   ProgrammableUnsupportedError,
   createClient,
   type ProgrammableClient,
-} from "@programmable-devkit/sdk";
+} from "@aabxtract/programmable-sdk";
 
 /** Identifiers that will not exist. A 404 for these means the *route* is live. */
 const SENTINEL_LAUNCH_ID = "00000000-0000-4000-8000-000000000000";

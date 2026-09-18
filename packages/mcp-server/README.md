@@ -1,4 +1,4 @@
-# @programmable-devkit/mcp-server
+# @aabxtract/programmable-mcp-server
 
 MCP server exposing the [Programmable Market](https://programmable.market) API to
 Claude Code, Cursor, Windsurf, and any other MCP client.
@@ -13,7 +13,7 @@ other seven work with no configuration at all.
   "mcpServers": {
     "programmable": {
       "command": "npx",
-      "args": ["@programmable-devkit/mcp-server"],
+      "args": ["@aabxtract/programmable-mcp-server"],
       "env": {
         "PROGRAMMABLE_API_KEY": "${env:PROGRAMMABLE_API_KEY}"
       }

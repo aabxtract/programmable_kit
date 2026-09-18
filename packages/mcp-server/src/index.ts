@@ -25,7 +25,7 @@ import {
   createClient,
   type FeedStatus,
   type ProgrammableClient,
-} from "@programmable-devkit/sdk";
+} from "@aabxtract/programmable-sdk";
 import { z } from "zod";
 
 const PACKAGE_VERSION = "0.1.0";

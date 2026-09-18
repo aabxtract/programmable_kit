@@ -1,5 +1,5 @@
 /**
- * @programmable-devkit/sdk
+ * @aabxtract/programmable-sdk
  *
  * TypeScript SDK for the Programmable Market API, defaulting to Robinhood Chain
  * (chainId 4663).

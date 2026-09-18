@@ -181,7 +181,7 @@ async function main(): Promise<void> {
   console.log("  Wired up:");
   console.log("    src/                        the contract, checked below");
   console.log("    programmable-launch.config.json");
-  console.log("    package.json                depends on @programmable-devkit/sdk");
+  console.log("    package.json                depends on @aabxtract/programmable-sdk");
   if (args.mcp) {
     console.log("    .mcp.json                   Programmable tools for your agent");
   }

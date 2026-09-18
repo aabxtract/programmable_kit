@@ -109,7 +109,7 @@ placeholder pass for a real value.
 | `.git-hooks/pre-commit` | Key leak guard (install with `git config core.hooksPath .git-hooks`) |
 | `.gitignore` | Excludes `.env`, `launch.json`, `out/`, `cache/`, `lib/` |
 | `.env.example` | `PROGRAMMABLE_API_KEY` placeholder |
-| `package.json` | Depends on `@programmable-devkit/sdk`; `check` / `watch` / `capabilities` scripts |
+| `package.json` | Depends on `@aabxtract/programmable-sdk`; `check` / `watch` / `capabilities` scripts |
 | `.mcp.json` | Wires the Programmable MCP tools into the project (skip with `--no-mcp`) |
 | `AGENTS.md` | Dropped at the project root so assistants pick it up automatically |
 | `scripts/watch-launch.mjs` | Waits for `authorized`, prints the wallet handoff URL |
@@ -118,13 +118,13 @@ placeholder pass for a real value.
 
 ### Why the SDK is a dependency, not scaffolded source
 
-The project gets `@programmable-devkit/sdk` in its `package.json` rather than a copy of
+The project gets `@aabxtract/programmable-sdk` in its `package.json` rather than a copy of
 the SDK's files. Copied source goes stale the moment the platform changes an endpoint,
 and the developer has no way to pull a fix. As a dependency it updates with
 `npm install`.
 
 The same reasoning applies to the MCP server: `.mcp.json` points at
-`npx @programmable-devkit/mcp-server`, so the agent always runs the current version.
+`npx @aabxtract/programmable-mcp-server`, so the agent always runs the current version.
 `${PROGRAMMABLE_API_KEY}` is expanded from the environment at launch — the key is never
 written into a file that gets committed.
 
@@ -281,7 +281,7 @@ npm publish -w packages/create-programmable-hook --access public
 
 > ⚠️ `create-programmable-hook` is an **unscoped** name and may already be taken. Check
 > with `npm view create-programmable-hook` first; if it's unavailable, publish as
-> `@programmable-devkit/create-hook` and adjust the `npx` invocations in the generated
+> `@aabxtract/create-programmable-hook` and adjust the `npx` invocations in the generated
 > README.
 
 ---
@@ -299,6 +299,6 @@ This CLI shifts the feedback earlier:
 
 - **Scaffold locally** → understand exactly what you're shipping
 - **Check locally** → catch all seven hard blocks before touching the API
-- **Submit once** → then watch the lifecycle with `@programmable-devkit/sdk`
+- **Submit once** → then watch the lifecycle with `@aabxtract/programmable-sdk`
 
 Reference: https://programmable.market/docs/developers/custom-launch

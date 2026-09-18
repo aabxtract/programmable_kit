@@ -25,7 +25,7 @@ programmable-devkit/
 ├── .gitignore                # Contains `.env`
 ├── .env.example
 ├── packages/
-│   ├── sdk/                  # @programmable-devkit/sdk — zero runtime deps
+│   ├── sdk/                  # @aabxtract/programmable-sdk — zero runtime deps
 │   │   └── src/
 │   │       ├── index.ts      # ProgrammableClient + createClient(FromManifest)
 │   │       ├── types.ts      # Types, constants, and ENDPOINTS
@@ -34,7 +34,7 @@ programmable-devkit/
 │   │       ├── modules.ts    # ModulesClient (derived — see §11)
 │   │       ├── verify.ts     # VerifyClient
 │   │       └── discovery.ts  # DiscoveryClient
-│   ├── mcp-server/           # @programmable-devkit/mcp-server
+│   ├── mcp-server/           # @aabxtract/programmable-mcp-server
 │   │   └── src/index.ts      # All 9 MCP tools
 │   └── create-programmable-hook/   # CLI scaffolder + guardrail checker
 │       └── BUILD_GUIDE.md    # Its own guide — see that file
@@ -195,7 +195,7 @@ bugs the type checker can't — it's how the `capabilities[]` shape error was fo
 ## 6. Use the SDK
 
 ```typescript
-import { createClient } from "@programmable-devkit/sdk";
+import { createClient } from "@aabxtract/programmable-sdk";
 
 // Key from PROGRAMMABLE_API_KEY; chain defaults to 4663
 const client = createClient();
@@ -267,7 +267,7 @@ The taxonomy exists so you can tell *fix my code* from *wait and retry*:
 Quote `.requestId` in support reports.
 
 ```typescript
-import { ProgrammableHttpError, ProgrammableNetworkError } from "@programmable-devkit/sdk";
+import { ProgrammableHttpError, ProgrammableNetworkError } from "@aabxtract/programmable-sdk";
 
 try {
   const launch = await client.launches.getByAddress("0x...", { chainId: 4663 });
@@ -388,7 +388,7 @@ Or directly: `npm start -w packages/mcp-server`
 ### After publishing
 
 Same block, with `"command": "npx"` and
-`"args": ["@programmable-devkit/mcp-server"]`.
+`"args": ["@aabxtract/programmable-mcp-server"]`.
 
 > 🔑 **Don't inline the key.** `${env:PROGRAMMABLE_API_KEY}` reads from your environment
 > at launch. Project-scoped MCP configs (`.cursor/mcp.json`, `.mcp.json`) are routinely
@@ -440,14 +440,14 @@ npm run check          # don't publish something that can't reach the API
 published:
 
 ```json
-"dependencies": { "@programmable-devkit/sdk": "^0.1.0" }
+"dependencies": { "@aabxtract/programmable-sdk": "^0.1.0" }
 ```
 
 **3.** `npm publish -w packages/mcp-server --access public`
 
 `--access public` is required — scoped packages default to restricted.
 
-You don't own the `@programmable` namespace — publish under `@programmable-devkit` or
+You don't own the `@programmable` namespace — publish under `@aabxtract` or
 your own scope until Programmable officially adopts the kit.
 
 ---

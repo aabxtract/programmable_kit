@@ -5,7 +5,7 @@
  * The CLI (`programmable`) is the primary interface; this exists for programmatic use.
  */
 
-export * from "@programmable-devkit/sdk";
+export * from "@aabxtract/programmable-sdk";
 export {
   scaffold,
   checkPath,

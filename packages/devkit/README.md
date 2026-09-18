@@ -11,7 +11,7 @@ programmable new my-hook --template creator-fee-hook --fee 3000 --symbol MYT
 
 ## What you get
 
-The scaffolded project **depends on** `@programmable-devkit/sdk` and is **already wired**
+The scaffolded project **depends on** `@aabxtract/programmable-sdk` and is **already wired**
 to your agent. The SDK and MCP server are dependencies, not copied source — they update
 with `npm install` rather than going stale in your repo.
 
@@ -19,7 +19,7 @@ with `npm install` rather than going stale in your repo.
 my-hook/
 ├── src/CreatorFeeHook.sol          checked before the command returns
 ├── programmable-launch.config.json --fee 3000 already substituted
-├── package.json                    depends on @programmable-devkit/sdk
+├── package.json                    depends on @aabxtract/programmable-sdk
 ├── .mcp.json                       MCP tools for Claude Code / Cursor / Windsurf
 ├── AGENTS.md                       compiler pin, 14 bits, return shapes
 ├── foundry.toml                    solc pinned to the platform toolchain

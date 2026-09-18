@@ -30,8 +30,8 @@
     "cli"
   ],
   "dependencies": {
-    "@programmable-devkit/mcp-server": "^0.1.0",
-    "@programmable-devkit/sdk": "^0.1.0",
+    "@aabxtract/programmable-mcp-server": "^0.1.0",
+    "@aabxtract/programmable-sdk": "^0.1.0",
     "create-programmable-hook": "^0.1.0"
   },
   "devDependencies": {
