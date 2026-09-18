@@ -21,6 +21,17 @@ export const DEFAULT_TEMPLATE = "buyback-hook";
 /** Version range the scaffolded project depends on. */
 const SDK_RANGE = "^0.1.0";
 
+/**
+ * v4-core tag the templates are verified against.
+ *
+ * Pinned deliberately: the v4 types moved between releases (`SwapParams` and
+ * `ModifyLiquidityParams` are nested under `IPoolManager` at this tag and relocated in
+ * later ones), so an unpinned `forge install` would break the templates on a future
+ * release. Both templates compile against this tag with solc 0.8.26.
+ */
+const V4_CORE_TAG = "v4.0.0";
+const FORGE_STD_TAG = "v1.9.4";
+
 export interface TemplateVariable {
   key: string;
   flag: string;
@@ -138,6 +149,7 @@ function projectPackageJson(projectName: string, contract: string): string {
       engines: { node: ">=20.6" },
       scripts: {
         check: "programmable-check ./src/",
+        setup: `forge install uniswap/v4-core@${V4_CORE_TAG} && forge install foundry-rs/forge-std@${FORGE_STD_TAG}`,
         build: "forge build",
         test: "forge test",
         watch: "node --env-file=.env scripts/watch-launch.mjs",
@@ -381,11 +393,16 @@ scaffolded from \`${manifest.name}\`.
 
 \`\`\`bash
 npm install
-forge install uniswap/v4-core && forge install foundry-rs/forge-std
+npm run setup                 # forge install, pinned to verified tags
 git config core.hooksPath .git-hooks
 cp .env.example .env          # then add your API key
 forge build
 \`\`\`
+
+> The v4-core tag is pinned to \`${V4_CORE_TAG}\`. The v4 types moved between releases —
+> \`SwapParams\` is nested under \`IPoolManager\` at this tag and relocated later — so an
+> unpinned install will break this contract on a future release. Both templates are
+> verified to compile against this tag with solc \`${REQUIRED_SOLC.split("+")[0]}\`.
 
 ## Before you submit
 

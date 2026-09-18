@@ -217,7 +217,7 @@ async function main(): Promise<void> {
   console.log("  Next:");
   console.log(`    cd ${args.projectName}`);
   console.log("    npm install");
-  console.log("    forge install uniswap/v4-core && forge install foundry-rs/forge-std");
+  console.log("    npm run setup    # forge install, pinned to verified tags");
   console.log("    cp .env.example .env    # add your API key");
   console.log("    npm run check\n");
 
